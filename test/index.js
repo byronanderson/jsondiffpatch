@@ -165,8 +165,10 @@ describe('DiffPatcher', function() {
           });
           if (!example.noPatch) {
             it('can patch', function() {
-              var right = this.instance.patch(jsondiffpatch.clone(example.left), example.delta);
+              var left = jsondiffpatch.clone(example.left);
+              var right = this.instance.patch(left, example.delta);
               expect(right).to.be.deepEqual(example.right);
+              expect(left).to.be.deepEqual(example.left);
             });
             it('can reverse delta', function() {
               var reverse = this.instance.reverse(example.delta);
@@ -328,8 +330,8 @@ describe('DiffPatcher', function() {
         var reverseDelta = this.instance.reverse(delta);
         expect(reverseDelta).to.be.deepEqual({ population: [0, -3, NUMERIC_DIFFERENCE] });
         var right = { population: 703 };
-        this.instance.unpatch(right, delta);
-        expect(right).to.be.deepEqual({ population: 700 });
+        var unpatched = this.instance.unpatch(right, delta);
+        expect(unpatched).to.be.deepEqual({ population: 700 });
       });
 
     });

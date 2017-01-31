@@ -252,6 +252,7 @@ var patchFilter = function nestedPatchFilter(context) {
   var index, index1;
 
   var delta = context.delta;
+  context.left = context.left.slice();
   var array = context.left;
 
   // first, separate removals, insertions and modifications
@@ -315,13 +316,13 @@ var patchFilter = function nestedPatchFilter(context) {
   if (toModifyLength > 0) {
     for (index = 0; index < toModifyLength; index++) {
       var modification = toModify[index];
-      child = new PatchContext(context.left[modification.index], modification.delta);
+      child = new PatchContext(array[modification.index], modification.delta);
       context.push(child, modification.index);
     }
   }
 
   if (!context.children) {
-    context.setResult(context.left).exit();
+    context.setResult(array).exit();
     return;
   }
   context.exit();
@@ -337,6 +338,7 @@ var collectChildrenPatchFilter = function collectChildrenPatchFilter(context) {
   }
   var length = context.children.length;
   var child;
+  context.left = context.left.slice();
   for (var index = 0; index < length; index++) {
     child = context.children[index];
     context.left[child.childName] = child.result;

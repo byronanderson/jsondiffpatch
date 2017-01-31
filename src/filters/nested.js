@@ -89,9 +89,12 @@ var collectChildrenPatchFilter = function collectChildrenPatchFilter(context) {
   for (var index = 0; index < length; index++) {
     child = context.children[index];
     if (Object.prototype.hasOwnProperty.call(context.left, child.childName) && child.result === undefined) {
+      context.left = Object.assign({}, context.left);
       delete context.left[child.childName];
     } else if (context.left[child.childName] !== child.result) {
-      context.left[child.childName] = child.result;
+      var details = {};
+      details[child.childName] = child.result;
+      context.left = Object.assign({}, context.left, details);
     }
   }
   context.setResult(context.left).exit();
